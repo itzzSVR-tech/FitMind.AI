@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { Actor } from "next/font/google";
 import "./globals.css";
 
+import { ClerkProvider } from "@clerk/nextjs";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+
 const actor = Actor({
     subsets: ["latin"],
     weight: ["400"],
@@ -18,8 +22,21 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
-            <body className={`${actor.className} antialiased`}>{children}</body>
-        </html>
+        <ClerkProvider
+            publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY!}
+        >
+            <html lang="en">
+                <body className={`${actor.className} antialiased`}>
+                    <Navbar />
+                    {/* GRID BACKGROUND */}
+                    <div className="fixed inset-0 -z-1">
+                        <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-background"></div>
+                        <div className="absolute inset-0 bg-[linear-gradient(var(--cyber-grid-color)_1px,transparent_1px),linear-gradient(90deg,var(--cyber-grid-color)_1px,transparent_1px)] bg-[size:20px_20px]"></div>
+                    </div>
+                    <main className="pt-24 flex-grow">{children}</main>
+                    <Footer />
+                </body>
+            </html>
+        </ClerkProvider>
     );
 }
